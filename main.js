@@ -29,8 +29,8 @@ const getJobs = () => {
 };
 
 getJobs();
-//crear trabajos
 
+//crear trabajos
 const registerJob = () =>{
 
     const job = {
@@ -55,6 +55,16 @@ const registerJob = () =>{
     .catch(() => alert('Error en la base de datos'));
 }
 
+//Obtener un trabajo 
+const getJob = (id) => {
+    fetch(`${BASE_URL}/jobs/${id}`)
+    .then((response) => response.json())
+    .then ((data) => {
+        console.log(data);
+    })
+    .catch(() => alert('Error en la Api'));
+};
+
 //cards html
 
 const deleteJob = (id) => {
@@ -66,14 +76,9 @@ const deleteJob = (id) => {
 
 const renderJobs = (jobs) => {
 
-
 for(let {id,name,description, location, category,seniority} of jobs) {
-
-    const div = document.createElement("div");
-    div.classList.add("card", "m-2");
-    
- div.innerHTML += `
- <div>
+$('.container-cards').innerHTML += `
+ <div class="card m-2">
  <div class="card-content"> 
  <h1>${name}</h1>
  <p>${description}</p>
@@ -85,20 +90,13 @@ for(let {id,name,description, location, category,seniority} of jobs) {
      </div>
  </div>
 
- <div class="mt-2"> <button id="btn-save" class="button is-info">Save Details</button></div>
+ <div class="mt-2"> <button onclick="getJob(${id})" class="button is-info btn-save-details"">Save Details</button></div>
  </div>
  </div>
  `
- const detailsBtn = div.querySelector("#btn-save");
+}
 
- detailsBtn.onclick = function(){
-    //funcion para la card
-    console.log('btn');
- };
-
- $('.container-cards').append(div);
-}}
-
+}
 
 $('#form').addEventListener('submit', (e)=> {
 e.preventDefault();
