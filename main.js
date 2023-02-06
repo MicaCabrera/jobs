@@ -3,6 +3,19 @@ const $$ = (selector) => document.querySelectorAll(selector);
 
 const BASE_URL = "https://63e0180e59bccf35dabee582.mockapi.io/api";
 
+//vista
+
+$('#create-job').addEventListener('click', ()=> {
+$('#view-cards').classList.add('is-hidden');
+$('#view-form').classList.remove('is-hidden');
+})
+
+$('#home').addEventListener('click', ()=> {
+    $('#view-cards').classList.remove('is-hidden');
+    $('#view-form').classList.add('is-hidden');
+    })
+    
+
 //métodos
 
 //obtener todos los trabajos
@@ -42,12 +55,25 @@ const registerJob = () =>{
     .catch(() => alert('Error en la base de datos'));
 }
 
-//dom
+//cards html
+
+const deleteJob = (id) => {
+    fetch(`${BASE_URL}/jobs/${id}`, {
+        method: 'DELETE',
+    });
+};
+
 
 const renderJobs = (jobs) => {
+
+
 for(let {id,name,description, location, category,seniority} of jobs) {
- $('.container-cards').innerHTML += `
- <div class="card m-2">
+
+    const div = document.createElement("div");
+    div.classList.add("card", "m-2");
+    
+ div.innerHTML += `
+ <div>
  <div class="card-content"> 
  <h1>${name}</h1>
  <p>${description}</p>
@@ -59,14 +85,26 @@ for(let {id,name,description, location, category,seniority} of jobs) {
      </div>
  </div>
 
- <div class="mt-2"> <button class="button is-info">Save Details</button></div>
+ <div class="mt-2"> <button id="btn-save" class="button is-info">Save Details</button></div>
  </div>
  </div>
  `
+ const detailsBtn = div.querySelector("#btn-save");
+
+ detailsBtn.onclick = function(){
+    //funcion para la card
+    console.log('btn');
+ };
+
+ $('.container-cards').append(div);
 }}
 
 
 $('#form').addEventListener('submit', (e)=> {
-e.preventDefault();+
+e.preventDefault();
+
 registerJob();
+
+$('#view-cards').classList.remove('is-hidden');
+$('#view-form').classList.add('is-hidden');
 })
