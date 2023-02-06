@@ -10,11 +10,12 @@ const getJobs = () => {
     fetch(`${BASE_URL}/jobs`)
     .then((response) => response.json())
     .then ((data) => {
-        console.log(data)
+        renderJobs(data);
     })
     .catch(() => alert('Error en la Api'));
 };
 
+getJobs();
 //crear trabajos
 
 const registerJob = () =>{
@@ -46,22 +47,23 @@ const registerJob = () =>{
 const renderJobs = (jobs) => {
 for(let {id,name,description, location, category,seniority} of jobs) {
  $('.container-cards').innerHTML += `
- <div class="card column is-2 has-text-centered">
- <h1 class="title">Título Job</h1>
- <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-     Dolores eos voluptate quaerat sint temporibus eum pariatur ad explicabo eveniet.</p>
- <div class="is-flex is-justify-content-center mt-2">
-     <span class="tag is-dark mr-2">Info</span>
-     <span class="tag is-dark mr-2">Info</span>
-     <span class="tag is-dark mr-2">Info</span>
+ <div class="card m-2">
+ <div class="card-content"> 
+ <h1>${name}</h1>
+ <p>${description}</p>
+ <div class="is-flex mt-1">
+    <div>
+     <span class="tag is-dark mr-2">${location}</span>
+     <span class="tag is-dark mr-2">${category}</span>
+     <span class="tag is-dark mr-2">${seniority}</span>
+     </div>
  </div>
 
- <div class="m-2"> <button class="button is-info">Save Details</button></div>
-</div>
+ <div class="mt-2"> <button class="button is-info">Save Details</button></div>
+ </div>
+ </div>
  `
-}
-
-}
+}}
 
 
 $('#form').addEventListener('submit', (e)=> {
