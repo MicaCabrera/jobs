@@ -60,7 +60,7 @@ const getJob = (id) => {
     fetch(`${BASE_URL}/jobs/${id}`)
     .then((response) => response.json())
     .then ((data) => {
-        console.log(data);
+        showSaveDetails(data);
     })
     .catch(() => alert('Error en la Api'));
 };
@@ -94,9 +94,34 @@ $('.container-cards').innerHTML += `
  </div>
  </div>
  `
+}}
+
+const showSaveDetails = (data)=> {
+    $('.container-cards').innerHTML = '';
+
+    $('.container-cards').innerHTML += `
+    <div class="card m-2">
+    <div class="card-content"> 
+    <h1>${data.name}</h1>
+    <p>${data.description}</p>
+    <div class="is-flex mt-1">
+       <div>
+        <span class="tag is-dark mr-2">${data.location}</span>
+        <span class="tag is-dark mr-2">${data.category}</span>
+        <span class="tag is-dark mr-2">${data.seniority}</span>
+        </div>
+    </div>
+    
+
+    <div class="mt-2 is-flex">
+    <button class="button mr-1 is-info btn-save-details"">Edit Job</button>
+    <button class="button is-danger btn-save-details"">Delete Job</button>
+    </div>
+    </div>
+    </div>
+    `
 }
 
-}
 
 $('#form').addEventListener('submit', (e)=> {
 e.preventDefault();
