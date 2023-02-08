@@ -1,27 +1,12 @@
 const $ = (selector)=> document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
 const isHidden = (element)=>element.classList.add('is-hidden');
-const isRemove = (element)=>element.classList.add('is-hidden');
+const isRemove = (element)=>element.classList.remove('is-hidden');
 
 const BASE_URL = "https://63e0180e59bccf35dabee582.mockapi.io/api";
 let flagEdit = false;
 
-//vista
-
-
-
-
-$('#create-job').addEventListener('click', ()=> {
-$('#view-cards').classList.add('is-hidden');
-$('#view-form').classList.remove('is-hidden');
-})
-
-$('#home').addEventListener('click', ()=> {
-    $('#view-cards').classList.remove('is-hidden');
-    $('#view-form').classList.add('is-hidden');
-    })
-    
-
+   
 //métodos
 
 //crear trabajos
@@ -82,9 +67,9 @@ const renderJobs = (jobs) => {
 
 for(let {id,name,description, location, category,seniority} of jobs) {
 $('.container-cards').innerHTML += `
- <div class="card m-2">
+ <div class="card column is-3 m-2">
  <div class="card-content"> 
- <h1>${name}</h1>
+ <h1 class="has-text-black">${name}</h1>
  <p>${description}</p>
  <div class="is-flex mt-1">
     <div>
@@ -95,7 +80,7 @@ $('.container-cards').innerHTML += `
  </div>
 
  <div class="mt-2">
-  <button onclick="getJob(${id})" class="button is-info btn-save-details"">Save Details</button>
+  <button onclick="getJob(${id})" class="button is-info btn-save-details">Save Details</button>
   </div>
  </div>
  </div>
@@ -104,9 +89,11 @@ $('.container-cards').innerHTML += `
 
 //mostrar un trabajo específico
 const showSaveDetails = (data)=> {
+    isHidden($('#view-cards'));
+ 
     $('.details-card').innerHTML = '';
     $('.details-card').innerHTML += `
-    <div class=" column is-4 card m-2">
+    <div class="column is-3 card m-2">
     <div class="card-content"> 
     <h1>${data.name}</h1>
     <p>${data.description}</p>
@@ -137,18 +124,18 @@ const showSaveDetails = (data)=> {
     for(const btn of $$('.btn-edit')) {
     btn.addEventListener('click', ()=> {
         flagEdit = true;
-        const idEdit = btn.getAttribute("data-id"); //traemos el id del btn de arriba de editar
-        //usamos el mismo formualario de crear entonces:
+
+        const idEdit = btn.getAttribute("data-id"); 
+        isRemove($('#view-form'));
         $('.btn-create-form').textContent = "Editar";
         $('.btn-create-form').classList.add('is-primary');
         $('.btn-create-form').classList.remove('is-link');
-        $('.btn-create-form').setAttribute('data-id',idEdit)
-        getJob(idEdit);
-    })
+        $('.btn-create-form').setAttribute('data-id',idEdit);
+        getJob(data.id);
+        isHidden($('#view-cards'));
+        isRemove($('#view-form'));
+    });
 }
-
-//cancelar
-
 
 }
 //eliminar un trabajo
@@ -199,3 +186,16 @@ registerJob();
 $('#view-cards').classList.remove('is-hidden');
 $('#view-form').classList.add('is-hidden');
 })
+
+
+$('#create-job').addEventListener('click', ()=> {
+    isHidden($('#view-cards'));
+    isRemove($('#view-form'));
+  })
+  
+   
+  $('.btn-cancel-form').addEventListener('click', ()=> {
+    isRemove($('#view-cards')); 
+    isHidden($('#view-form'));
+    isHidden($('.details-card'));
+  })
