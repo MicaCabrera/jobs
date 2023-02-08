@@ -46,6 +46,7 @@ const getJobs = () => {
         renderJobs(data);
     })
     .catch(() => alert('Error en la Api'))
+    
 };
 
 getJobs();
@@ -56,7 +57,7 @@ const getJob = (id) => {
     .then((response) => response.json())
     .then ((data) => {
         showSaveDetails(data);
-        infoJobForm(data); //llenar form 
+        infoJobForm(data); 
     })
     .catch(() => alert('Error en la Api'));
 };
@@ -131,9 +132,9 @@ const showSaveDetails = (data)=> {
         $('.btn-create-form').classList.add('is-primary');
         $('.btn-create-form').classList.remove('is-link');
         $('.btn-create-form').setAttribute('data-id',idEdit);
-        getJob(data.id);
-        isHidden($('#view-cards'));
-        isRemove($('#view-form'));
+        getJob(idEdit);
+        //boton cancelar
+        $('.btn-cancel-form').remove();
     });
 }
 
@@ -176,8 +177,7 @@ const infoJobForm = (data) => {
 $('#form').addEventListener('submit', (e)=> {
 e.preventDefault();
 if (flagEdit) {
-const jobId = $('.btn-create-form').getAttribute('data-id'); //obtener el id del boton de editar
-// console.log(jobId);
+const jobId = $('.btn-create-form').getAttribute('data-id'); 
 editJob(jobId);
 } else {
 registerJob();
@@ -187,15 +187,26 @@ $('#view-cards').classList.remove('is-hidden');
 $('#view-form').classList.add('is-hidden');
 })
 
+$('#home').addEventListener('click',()=> {
+isHidden($('#view-form'));
+isRemove($('#view-cards'));
+$('.details-card').innerHTML = '';
+
+})
 
 $('#create-job').addEventListener('click', ()=> {
     isHidden($('#view-cards'));
     isRemove($('#view-form'));
+
+    $('.btn-create-form').textContent = "Create";
+    $('.btn-create-form').classList.remove('is-primary');
+    $('.btn-create-form').classList.add('is-link');
+    $('.btn-create-form').removeAttribute('data-id',idEdit);
+
+    registerJob();
   })
   
-   
-  $('.btn-cancel-form').addEventListener('click', ()=> {
-    isRemove($('#view-cards')); 
+$('.btn-cancel-form').addEventListener('click', ()=> {
     isHidden($('#view-form'));
-    isHidden($('.details-card'));
-  })
+    isRemove($('#view-cards'));
+   })
