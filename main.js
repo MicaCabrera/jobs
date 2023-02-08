@@ -1,9 +1,15 @@
 const $ = (selector)=> document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
+const isHidden = (element)=>element.classList.add('is-hidden');
+const isRemove = (element)=>element.classList.add('is-hidden');
 
 const BASE_URL = "https://63e0180e59bccf35dabee582.mockapi.io/api";
+let flagEdit = false;
 
 //vista
+
+
+
 
 $('#create-job').addEventListener('click', ()=> {
 $('#view-cards').classList.add('is-hidden');
@@ -18,29 +24,20 @@ $('#home').addEventListener('click', ()=> {
 
 //métodos
 
-//obtener todos los trabajos
-const getJobs = () => {
-    fetch(`${BASE_URL}/jobs`)
-    .then((response) => response.json())
-    .then ((data) => {
-        renderJobs(data);
-    })
-    .catch(() => alert('Error en la Api'))
+//crear trabajos
+const jobForm = () => {
+    const job = {
+        name: $('#title').value,
+        description:$('#description').value,
+        location:$('#location').value,
+        category:$('#category').value,
+        seniority:$('#seniority').value,
+        };
+    return job
 };
 
-getJobs();
-
-//crear trabajos
 const registerJob = () =>{
-
-    const job = {
-    name: $('#title').value,
-    description:$('#description').value,
-    location:$('#location').value,
-    category:$('#category').value,
-    seniority:$('#seniority').value,
-    }
-  
+    const job = jobForm();
     fetch(`${BASE_URL}/jobs`, {
     method: 'POST',
     headers: {
@@ -55,6 +52,18 @@ const registerJob = () =>{
     .catch(() => alert('Error en la base de datos'))
     .finally(()=> (window.location.href ="index.html"));
 }
+
+//obtener todos los trabajos
+const getJobs = () => {
+    fetch(`${BASE_URL}/jobs`)
+    .then((response) => response.json())
+    .then ((data) => {
+        renderJobs(data);
+    })
+    .catch(() => alert('Error en la Api'))
+};
+
+getJobs();
 
 //Obtener un trabajo 
 const getJob = (id) => {
@@ -85,7 +94,9 @@ $('.container-cards').innerHTML += `
      </div>
  </div>
 
- <div class="mt-2"> <button onclick="getJob(${id})" class="button is-info btn-save-details"">Save Details</button></div>
+ <div class="mt-2">
+  <button onclick="getJob(${id})" class="button is-info btn-save-details"">Save Details</button>
+  </div>
  </div>
  </div>
  `
@@ -93,8 +104,9 @@ $('.container-cards').innerHTML += `
 
 //mostrar un trabajo específico
 const showSaveDetails = (data)=> {
+    $('.details-card').innerHTML = '';
     $('.details-card').innerHTML += `
-    <div class="card m-2">
+    <div class=" column is-4 card m-2">
     <div class="card-content"> 
     <h1>${data.name}</h1>
     <p>${data.description}</p>
@@ -115,34 +127,56 @@ const showSaveDetails = (data)=> {
     </div>
     `
     //eliminar btn
-    $('.btn-delete').addEventListener('click', ()=> {
-        const idDelete = $('.btn-delete').getAttribute("data-id");
+    for(const btn of $$('.btn-delete')) {
+    btn.addEventListener('click', ()=> {
+        const idDelete = btn.getAttribute("data-id");
         deleteJob(idDelete); 
-    })
+    })}
    
     //editar btn
-    $('.btn-edit').addEventListener('click', ()=> {
-        const idEdit = $('.btn-delete').getAttribute("data-id");
+    for(const btn of $$('.btn-edit')) {
+    btn.addEventListener('click', ()=> {
+        flagEdit = true;
+        const idEdit = btn.getAttribute("data-id"); //traemos el id del btn de arriba de editar
         //usamos el mismo formualario de crear entonces:
         $('.btn-create-form').textContent = "Editar";
         $('.btn-create-form').classList.add('is-primary');
-        $('.btn-create-form').classList.remove("is-link");
+        $('.btn-create-form').classList.remove('is-link');
+        $('.btn-create-form').setAttribute('data-id',idEdit)
         getJob(idEdit);
     })
+}
+
+//cancelar
 
 
 }
-
 //eliminar un trabajo
 
 const deleteJob = (id) => {
     fetch(`${BASE_URL}/jobs/${id}`, {
         method: 'DELETE',
     })
-    .finally(()=> (window.location.href ="index.html")); //Actualiza la vista
+    .finally(()=> (window.location.href ="index.html")); 
 };
 
-//llenar el formulario de editar con la info del trabajo seleccionado
+const editJob = (id) => {
+    const job = jobForm();
+    fetch(`${BASE_URL}/jobs/${id}`,{
+    method: 'PUT',
+    headers: {
+        "Content-Type": "Application/json",
+     },
+    body: JSON.stringify(job),
+    })
+    .then((response)=> response.json())
+    .then((data)=>{
+        console.log(data);
+    })
+    .finally(()=>(window.location.href="index.html"));
+}
+
+// //llenar el formulario de editar con la info del trabajo seleccionado
 const infoJobForm = (data) => {
     $('#title').value = data.name;
     $('#description').value = data.description;
@@ -151,12 +185,17 @@ const infoJobForm = (data) => {
     $('#seniority').value = data.seniority;      
 };
 
+//eventos
 $('#form').addEventListener('submit', (e)=> {
 e.preventDefault();
-
+if (flagEdit) {
+const jobId = $('.btn-create-form').getAttribute('data-id'); //obtener el id del boton de editar
+// console.log(jobId);
+editJob(jobId);
+} else {
 registerJob();
+}
 
-//fijarme q agregué el finally
 $('#view-cards').classList.remove('is-hidden');
 $('#view-form').classList.add('is-hidden');
 })
