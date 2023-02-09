@@ -43,6 +43,7 @@ const getJobs = () => {
     fetch(`${BASE_URL}/jobs`)
     .then((response) => response.json())
     .then ((data) => {
+        nameSelectFilters(data);
         renderJobs(data);
     })
     .catch(() => alert('Error en la Api'))
@@ -211,7 +212,36 @@ $('#create-job').addEventListener('click', ()=> {
     $('.btn-create-form').removeAttribute('data-id',idEdit);
   })
   
-$('.btn-cancel-form').addEventListener('click', ()=> {
-    isHidden($('#view-form'));
-    isRemove($('#view-cards'));
-   })
+
+//filtros
+
+
+
+const nameSelectFilters = (jobs) => {
+const filterLocation = jobs.map((location)=> location.location);
+const filterLocationSet = new Set(filterLocation);
+
+const filterSeniority = jobs.map((seniority)=> seniority.seniority);
+const filterSenioritySet = new Set(filterSeniority);
+
+const filterCategory = jobs.map((category)=> category.category);
+const filterCategorySet = new Set(filterCategory);
+
+for (let location of filterLocationSet) {
+ $('#select-location').innerHTML += `<option value="${location}"> ${location} </option>`
+}
+
+for(let seniority of filterSenioritySet) {
+$('#select-seniority').innerHTML += `<option value="${seniority}"> ${seniority} </option>`
+}
+
+for(let category of filterCategorySet) {
+    $('#select-category').innerHTML += `<option value="${category}"> ${category} </option>`
+    }
+}
+
+// for (let {location, category, seniority} of result) {
+//     $('#select-location').innerHTML += `<option value="${location}"> ${location} </option>`
+//     $('#select-category').innerHTML += `<option value="${category}"> ${category} </option>`
+//     $('#select-seniority').innerHTML += `<option value="${seniority}"> ${seniority} </option>`
+// }
