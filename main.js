@@ -5,6 +5,7 @@ const isRemove = (element)=>element.classList.remove('is-hidden');
 
 const BASE_URL = "https://63e0180e59bccf35dabee582.mockapi.io/api";
 let flagEdit = false;
+let flagFilter =false;
 
    
 //métodos
@@ -42,14 +43,26 @@ const registerJob = () =>{
 const getJobs = () => {
     fetch(`${BASE_URL}/jobs`)
     .then((response) => response.json())
-    .then ((data) => {
-        renderJobs(data);
+    .then ((jobs) => {
+        renderJobs(jobs);
+    })
+    .catch(() => alert('Error en la Api'))
+    
+};
+
+//obtener Usuarios filtrados
+const getJobsFilter = () => {
+    fetch(`${BASE_URL}/jobs`)
+    .then((response) => response.json())
+    .then ((jobs) => {
+        filterLocation(jobs);
     })
     .catch(() => alert('Error en la Api'))
     
 };
 
 getJobs();
+getJobsFilter();
 
 //Obtener un trabajo 
 const getJob = (id) => {
@@ -87,7 +100,32 @@ $('.container-cards').innerHTML += `
  </div>
  `
 }}
-
+// Mostrar trabajos filtrados
+const renderJobsFilter = (jobsFiltered) => {
+    $('.container-cards').innerHTML ='';
+    $('.container-filters').innerHTML='';
+    for(let {id,name,description, location, category,seniority} of jobsFiltered) {
+    $('.container-filters').innerHTML += `
+     <div class="card column is-3 m-2">
+     <div class="card-content"> 
+     <h1 class="has-text-black">${name}</h1>
+     <p>${description}</p>
+     <div class="is-flex mt-1">
+        <div>
+         <span class="tag is-dark mr-2">${location}</span>
+         <span class="tag is-dark mr-2">${category}</span>
+         <span class="tag is-dark mr-2">${seniority}</span>
+         </div>
+     </div>
+    
+     <div class="mt-2">
+      <button onclick="getJob(${id})" class="button is-info btn-save-details">Save Details</button>
+      </div>
+     </div>
+     </div>
+     `
+    }}
+    
 //mostrar un trabajo específico
 const showSaveDetails = (data)=> {
     isHidden($('#view-cards'));
@@ -188,8 +226,12 @@ $('#view-form').classList.add('is-hidden');
 })
 
 $('#home').addEventListener('click',()=> {
+if(flagFilter) {
+getJobs();}
+
 isHidden($('#view-form'));
 isRemove($('#view-cards'));
+$('.container-filters').innerHTML='';
 $('.details-card').innerHTML = '';
 
 })
@@ -197,6 +239,8 @@ $('.details-card').innerHTML = '';
 //vista Create home, limpiar formulario, cambiar boton
 $('#create-job').addEventListener('click', ()=> {
     flagEdit = false;
+    $('.container-cards').innerHTML ='';
+    $('.container-filters').innerHTML='';
     isHidden($('#view-cards'));
     isRemove($('#view-form'));
     $('#title').value = " ";
@@ -211,7 +255,30 @@ $('#create-job').addEventListener('click', ()=> {
     $('.btn-create-form').removeAttribute('data-id',idEdit);
   })
   
-$('.btn-cancel-form').addEventListener('click', ()=> {
-    isHidden($('#view-form'));
-    isRemove($('#view-cards'));
-   })
+// $('.btn-cancel-form').addEventListener('click', ()=> {
+//     isHidden($('#view-form'));
+//     isRemove($('#view-cards'));
+//    })
+
+   //Filtros
+
+console.log($('#select-location'));
+
+
+
+const filterLocation = (jobs) => {
+    flagFilter = true;
+$('#select-location').addEventListener('change',(e)=> {
+    const valueLocation = $('#select-location').value;
+    const jobsLocation = jobs.filter((job)=> job.location === valueLocation);
+    renderJobsFilter(jobsLocation);
+})
+}
+
+// const filterLocation = (jobs) => {
+//     $('#select-location').addEventListener('change',(e)=> {
+//         const valueLocation = $('#select-location').value;
+//     })
+    
+// }
+
