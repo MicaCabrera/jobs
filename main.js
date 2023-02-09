@@ -56,6 +56,7 @@ const getJobsFilter = () => {
     .then((response) => response.json())
     .then ((jobs) => {
         filterLocation(jobs);
+        filterSeniority(jobs);
     })
     .catch(() => alert('Error en la Api'))
     
@@ -162,6 +163,8 @@ const showSaveDetails = (data)=> {
     //editar btn
     for(const btn of $$('.btn-edit')) {
     btn.addEventListener('click', ()=> {
+        $('.container-filters').innerHTML='';
+        $('.container-cards').innerHTML ='';
         flagEdit = true;
 
         const idEdit = btn.getAttribute("data-id"); 
@@ -255,30 +258,35 @@ $('#create-job').addEventListener('click', ()=> {
     $('.btn-create-form').removeAttribute('data-id',idEdit);
   })
   
-// $('.btn-cancel-form').addEventListener('click', ()=> {
-//     isHidden($('#view-form'));
-//     isRemove($('#view-cards'));
-//    })
 
-   //Filtros
-
-console.log($('#select-location'));
-
-
+ //Filtros
 
 const filterLocation = (jobs) => {
     flagFilter = true;
 $('#select-location').addEventListener('change',(e)=> {
     const valueLocation = $('#select-location').value;
     const jobsLocation = jobs.filter((job)=> job.location === valueLocation);
+    // const prueba = new Set(jobsLocation);
+    // let resultado = [...prueba]
+    // renderJobsFilter(resultado);
     renderJobsFilter(jobsLocation);
 })
 }
 
-// const filterLocation = (jobs) => {
-//     $('#select-location').addEventListener('change',(e)=> {
-//         const valueLocation = $('#select-location').value;
-//     })
-    
-// }
+const filterSeniority  = (jobs) => {
+    flagFilter = true;
+    $('#select-seniority').addEventListener('change',(e)=> {
+        const valueSeniority= $('#select-seniority').value;
+        const jobsSeniority = jobs.filter((job)=> job.seniority=== valueSeniority);
+        renderJobsFilter(jobsSeniority);
+    })
+}
 
+const filterCategory = (jobs) => {
+    flagFilter = true;
+    $('#select-category').addEventListener('change',(e)=> {
+        const valueCategory= $('#select-category').value;
+        const jobsCategory = jobs.filter((job)=> job.category=== valueCategory);
+        renderJobsFilter(jobsCategory);
+    })
+}
