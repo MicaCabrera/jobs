@@ -116,12 +116,16 @@
       </section>
 </main>
 
-<div class="modal">
+<div class="modal" id="modal">
   <div class="modal-background"></div>
-  <div class="modal-content">
-    <!-- Any other Bulma elements you want -->
+  <div class=" p-5 has-text-centered modal-content has-background-danger-light" id="modal-content">
+    <p>Are you sure you want to delete user? </p>
+    <div class="is-flex is-justify-content-center">
+      <button class="button is-primary m-5" id="btn-confirm-delete" type="submit">Confirm</button>
+      <button id="btn-cancel" type="button" class="button is-danger m-5">Cancel</button>
+    </div>
   </div>
-  <button class="modal-close is-large" aria-label="close"></button>
+  <button class="modal-close is-large" aria-label="close" id="btn-modal-close"></button>
 </div>
 
 
