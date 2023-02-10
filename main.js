@@ -42,9 +42,10 @@ const registerJob = () =>{
 const getJobs = () => {
     fetch(`${BASE_URL}/jobs`)
     .then((response) => response.json())
-    .then ((data) => {
-        nameSelectFilters(data);
-        renderJobs(data);
+    .then ((jobs) => {
+        nameSelectFilters(jobs);
+        renderJobs(jobs);
+        filterLocation(jobs);  
     })
     .catch(() => alert('Error en la Api'))
     
@@ -175,24 +176,23 @@ const infoJobForm = (data) => {
 };
 
 //eventos
+$('#home').addEventListener('click',()=> {
+window.location.href = "index.html";
+//isHidden($('#view-form'));
+})
+
 $('#form').addEventListener('submit', (e)=> {
-e.preventDefault();
+    e.preventDefault();
+
 if (flagEdit) {
-const jobId = $('.btn-create-form').getAttribute('data-id'); 
-editJob(jobId);
+    const jobId = $('.btn-create-form').getAttribute('data-id'); 
+    editJob(jobId);
 } else {
-registerJob();
+    registerJob();
 }
 
 $('#view-cards').classList.remove('is-hidden');
 $('#view-form').classList.add('is-hidden');
-})
-
-$('#home').addEventListener('click',()=> {
-isHidden($('#view-form'));
-isRemove($('#view-cards'));
-$('.details-card').innerHTML = '';
-
 })
 
 //vista Create home, limpiar formulario, cambiar boton
@@ -200,12 +200,14 @@ $('#create-job').addEventListener('click', ()=> {
     flagEdit = false;
     isHidden($('#view-cards'));
     isRemove($('#view-form'));
+    //vaciar formulario
     $('#title').value = " ";
     $('#description').value = " ";
     $('#location').value = " ";
     $('#category').value = " ";
     $('#seniority').value = " ";
     $('.details-card').innerHTML = '';
+
     $('.btn-create-form').textContent = "Create";
     $('.btn-create-form').classList.remove('is-primary');
     $('.btn-create-form').classList.add('is-link');
@@ -214,8 +216,7 @@ $('#create-job').addEventListener('click', ()=> {
   
 
 //filtros
-
-
+//arreglar q no se vea el Seniority...
 
 const nameSelectFilters = (jobs) => {
 const filterLocation = jobs.map((location)=> location.location);
@@ -240,8 +241,33 @@ for(let category of filterCategorySet) {
     }
 }
 
-// for (let {location, category, seniority} of result) {
-//     $('#select-location').innerHTML += `<option value="${location}"> ${location} </option>`
-//     $('#select-category').innerHTML += `<option value="${category}"> ${category} </option>`
-//     $('#select-seniority').innerHTML += `<option value="${seniority}"> ${seniority} </option>`
-// }
+
+//busca x filtro 
+const filterLocation = (jobs) => {
+    $('#btn-search').addEventListener('click', ()=> {
+    const valueLocation = $('#select-location').value;
+    const valueSeniority =$('#select-seniority').value;
+    const valueCategory = $('#select-category').value;
+     
+    let filterJobs =  [...jobs];
+    filterJobs = filterJobs.filter((job)=> job.location === valueLocation);
+    filterJobs = filterJobs.filter((job)=>job.seniority === valueSeniority);
+    filterJobs = filterJobs.filter((job)=> job.category === valueCategory);
+    console.log(filterJobs);
+    
+    if(filterJobs.length > 0) {
+        filterJobs = filterJobs.filter((job)=> job.location === valueLocation);
+        filterJobs = filterJobs.filter((job)=>job.seniority === valueSeniority);
+        filterJobs = filterJobs.filter((job)=> job.category === valueCategory);
+        renderFilters(filterJobs);
+    }
+   else if (filterJobs.length === 0) {
+    $('.container-cards').innerHTML ='No se encontraron resultados' };
+    })
+}
+
+//muestra los trabajos filtrados
+const renderFilters = (filterJobs) => {
+$('.container-cards').innerHTML ='';
+renderJobs(filterJobs);
+}
