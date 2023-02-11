@@ -10,7 +10,6 @@ let flagEdit = false;
 
 //vista index 
 const index = () => {
-  showLoading();
   window.location.href = "index.html";
 }
 
@@ -72,7 +71,7 @@ const getJob = (id) => {
 const renderJobs = (jobs) => {
   for (let { id, name, description, location, category, seniority } of jobs) {
     $(".container-cards").innerHTML += `
- <div class="card column is-3 m-2">
+ <div class="column is-one-quarter m-3 box">
  <div class="card-content"> 
  <h1 class="has-text-black">${name}</h1>
  <p>${description}</p>
@@ -182,62 +181,6 @@ const infoJobForm = (data) => {
   $("#seniority").value = data.seniority;
 };
 
-//muestra los trabajos filtrados
-const renderFilters = (filterJobs) => {
-  $(".container-cards").innerHTML = "";
-  renderJobs(filterJobs);
-};
-
-//modal vista
-
-const showModal = () => {
-  $('#modal').classList.add('is-active');
-}
-
-const hiddeModal = () => {
-  $('#modal').classList.remove('is-active');
-}
-
-const showLoading = ()=> {
-  $(".container-cards").innerHTML += `
-<button class="button is-loading">Loading</button>`
-}
-
-
-//vista principal home
-$("#home").addEventListener('click',index);
-
-// limpia los filtros
-$('#btn-clear').addEventListener('click',index);
-
-//vista Create Job
-$("#create-job").addEventListener("click", () => {
-  flagEdit = false;
-  isHidden($("#view-cards"));
-  isRemove($("#view-form"));
-
-  $(".btn-create-form").textContent = "Create";
-  $(".btn-create-form").classList.remove("is-primary");
-  $(".btn-create-form").classList.add("is-link");
-  $(".btn-create-form").removeAttribute("data-id", idEdit);
-});
-
-//formulario
-$("#form").addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  if (flagEdit) {
-    const jobId = $(".btn-create-form").getAttribute("data-id");
-    editJob(jobId);
-  } else {
-    registerJob();
-  }
-
-  $("#view-cards").classList.remove("is-hidden");
-  $("#view-form").classList.add("is-hidden");
-});
-
-
 //filtros
 const nameSelectFilters = (jobs) => {
   const filterLocation = jobs.map((location) => location.location);
@@ -294,6 +237,63 @@ const filterLocation = (jobs) => {
   });
 };
 
+//muestra los trabajos filtrados
+const renderFilters = (filterJobs) => {
+  $(".container-cards").innerHTML = "";
+  renderJobs(filterJobs);
+};
+
+//modal vista
+
+const showModal = () => {
+  $('#modal').classList.add('is-active');
+}
+
+const hiddeModal = () => {
+  $('#modal').classList.remove('is-active');
+}
+
+const showLoading = ()=> {
+  $(".container-cards").innerHTML += `
+<button class="button is-loading">Loading</button>`
+}
+
+//eventos
+
+//vista principal home
+$("#home").addEventListener('click',index);
+
+// limpia los filtros
+$('#btn-clear').addEventListener('click',index);
+
+//vista Create Job
+$("#create-job").addEventListener("click", () => {
+  flagEdit = false;
+  isHidden($("#view-cards"));
+  isRemove($("#view-form"));
+
+  $(".btn-create-form").textContent = "Create";
+  $(".btn-create-form").classList.remove("is-primary");
+  $(".btn-create-form").classList.add("is-link");
+  $(".btn-create-form").removeAttribute("data-id", idEdit);
+});
+
+//formulario
+$("#form").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (flagEdit) {
+    const jobId = $(".btn-create-form").getAttribute("data-id");
+    editJob(jobId);
+  } else {
+    registerJob();
+  }
+
+  $("#view-cards").classList.remove("is-hidden");
+  $("#view-form").classList.add("is-hidden");
+});
+
+//modal 
 $('#btn-modal-close').addEventListener('click', hiddeModal);
 $('#btn-cancel').addEventListener('click', hiddeModal);
 $('#btn-confirm-delete').addEventListener('click', (e)=>{
@@ -301,6 +301,10 @@ $('#btn-confirm-delete').addEventListener('click', (e)=>{
   deleteJob(id);
 })
 
+//nav
+$('#btn-nav').addEventListener('click',()=>{
+  $('.navbar-menu').classList.toggle('is-active');
 
-
-
+  for(let a of $$('.nav-color')) {
+  a.classList.toggle('has-text-link-dark'); }
+} )
