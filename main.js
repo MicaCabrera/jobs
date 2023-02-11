@@ -8,10 +8,10 @@ let flagEdit = false;
 
 //métodos
 
-//vista index 
+//vista index
 const index = () => {
   window.location.href = "index.html";
-}
+};
 
 //crear trabajos
 const jobForm = () => {
@@ -122,10 +122,9 @@ const showSaveDetails = (data) => {
   for (const btn of $$(".btn-delete")) {
     btn.addEventListener("click", () => {
       const idDelete = btn.getAttribute("data-id");
-     
-      $('#btn-confirm-delete').setAttribute('data-id', idDelete);
-       showModal();
-      // deleteJob(idDelete);
+
+      $("#btn-confirm-delete").setAttribute("data-id", idDelete);
+      showModal();
     });
   }
 
@@ -141,12 +140,12 @@ const showSaveDetails = (data) => {
       $(".btn-create-form").classList.remove("is-link");
       $(".btn-create-form").setAttribute("data-id", idEdit);
       getJob(idEdit);
+
       //boton cancelar
       $(".btn-cancel-form").remove();
     });
   }
 };
-
 
 //eliminar un trabajo
 const deleteJob = (id) => {
@@ -220,8 +219,6 @@ const filterLocation = (jobs) => {
 
     let filterJobs = [...jobs];
 
-    
-
     if (valueLocation !== "Location") {
       filterJobs = filterJobs.filter((job) => job.location === valueLocation);
     }
@@ -231,8 +228,6 @@ const filterLocation = (jobs) => {
     if (valueCategory !== "Category") {
       filterJobs = filterJobs.filter((job) => job.category === valueCategory);
     }
-
-    console.log(filterJobs);
     renderFilters(filterJobs);
   });
 };
@@ -246,25 +241,25 @@ const renderFilters = (filterJobs) => {
 //modal vista
 
 const showModal = () => {
-  $('#modal').classList.add('is-active');
-}
+  $("#modal").classList.add("is-active");
+};
 
 const hiddeModal = () => {
-  $('#modal').classList.remove('is-active');
-}
+  $("#modal").classList.remove("is-active");
+};
 
-const showLoading = ()=> {
+const showLoading = () => {
   $(".container-cards").innerHTML += `
-<button class="button is-loading">Loading</button>`
-}
+<button class="button is-loading">Loading</button>`;
+};
 
 //eventos
 
 //vista principal home
-$("#home").addEventListener('click',index);
+$("#home").addEventListener("click", index);
 
 // limpia los filtros
-$('#btn-clear').addEventListener('click',index);
+$("#btn-clear").addEventListener("click", index);
 
 //vista Create Job
 $("#create-job").addEventListener("click", () => {
@@ -293,18 +288,19 @@ $("#form").addEventListener("submit", (e) => {
   $("#view-form").classList.add("is-hidden");
 });
 
-//modal 
-$('#btn-modal-close').addEventListener('click', hiddeModal);
-$('#btn-cancel').addEventListener('click', hiddeModal);
-$('#btn-confirm-delete').addEventListener('click', (e)=>{
-  const id = e.target.getAttribute('data-id');
+//modal
+$("#btn-modal-close").addEventListener("click", hiddeModal);
+$("#btn-cancel").addEventListener("click", hiddeModal);
+$("#btn-confirm-delete").addEventListener("click", (e) => {
+  const id = e.target.getAttribute("data-id");
   deleteJob(id);
-})
+});
 
 //nav
-$('#btn-nav').addEventListener('click',()=>{
-  $('.navbar-menu').classList.toggle('is-active');
+$("#btn-nav").addEventListener("click", () => {
+  $(".navbar-menu").classList.toggle("is-active");
 
-  for(let a of $$('.nav-color')) {
-  a.classList.toggle('has-text-link-dark'); }
-} )
+  for (let a of $$(".nav-color")) {
+    a.classList.toggle("has-text-link-dark");
+  }
+});
