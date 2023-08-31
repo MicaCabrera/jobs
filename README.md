@@ -20,7 +20,7 @@ Clona este repositorio en tu máquina local.
 Abre el archivo index.html en tu navegador.
 Utiliza la aplicación para agregar, crear, mostrar, filtrar y editar trabajos.
 
-Tabién puedes ver el deploy en el siguiente enlace: 
+También puedes ver el deploy en el siguiente enlace: 
 https://micacabrera.github.io/jobs/
 
 Gracias por leer.
